@@ -8,6 +8,8 @@ e-mail: juan-jesus.torre-tresols@inria.fr
 
 import json
 
+from pprint import pprint
+
 
 # Load data
 with open('dictionary.json', 'r') as dictionary:
@@ -30,16 +32,20 @@ def retrieve_definition(word):
                 definition of the word requested y the function call
     """
 
-    try:
+    if word in data:
         definition = data[word]
-    except KeyError as err:
-        raise KeyError("The word does not exist in the dictionary, please try again") from err
+    elif word.title() in data:
+        definition = data[word.title()]
+    elif word.upper() in data:
+        definition = data[word.upper()]
+    else:
+        definition = "The word doesn't exist, please double check it"
 
     return definition
 
 
 # Input from user
-word_user = input("Enter a word: ")
+word_user = input("Enter a word: ").lower()
 
 # Do the thing
-print(retrieve_definition(word_user))
+pprint(retrieve_definition(word_user))
