@@ -8,6 +8,7 @@ e-mail: juan-jesus.torre-tresols@inria.fr
 
 import json
 
+from difflib import get_close_matches
 from pprint import pprint
 
 
@@ -38,6 +39,17 @@ def retrieve_definition(word):
         definition = data[word.title()]
     elif word.upper() in data:
         definition = data[word.upper()]
+    elif len(get_close_matches(word, data.keys())) > 0:
+        closest = get_close_matches(word, data.keys())[0]
+        action = input("Did you mean %s instead? [y/n]: " % closest)
+
+        if action.lower() == "y":
+            definition = data[closest]
+        elif action.lower() == "n":
+            definition = "The word does not exist yet"
+        else:
+            definition = "I do not understand, please try again"
+
     else:
         definition = "The word doesn't exist, please double check it"
 
@@ -48,4 +60,8 @@ def retrieve_definition(word):
 word_user = input("Enter a word: ").lower()
 
 # Do the thing
-pprint(retrieve_definition(word_user))
+output = retrieve_definition(word_user)
+
+# Print each definition in one line
+for item in output:
+    print("-", item)
